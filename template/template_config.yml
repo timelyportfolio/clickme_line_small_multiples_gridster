@@ -1,11 +1,6 @@
 info: |
   Produce a draggable gridster small multiples line chart using d3
 
-valid_names:
-
-name_comments: |
-
-
 scripts:
   - http://d3js.org/d3.v3.min.js
   - http://code.jquery.com/jquery-1.9.1.min.js
@@ -15,8 +10,14 @@ scripts:
 styles:
   - jquery.gridster.css
 
+data_names:
+  required:
+    - "date"
+    - "indexname"
+    - "value"
+  optional:
 
-default_parameters: {
+params: {
   width: 960,
   height: 500,
   title: Gridster Small Multiples in d3 With clickme,
