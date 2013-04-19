@@ -1,0 +1,33 @@
+info: |
+  Produce a draggable gridster small multiples line chart using d3
+
+valid_names:
+
+name_comments: |
+
+
+scripts:
+  - http://d3js.org/d3.v3.min.js
+  - http://code.jquery.com/jquery-1.9.1.min.js
+  - http://code.jquery.com/jquery-migrate-1.1.1.min.js
+  - jquery.gridster.js
+
+styles:
+  - jquery.gridster.css
+
+
+default_parameters: {
+  width: 960,
+  height: 500,
+  title: Gridster Small Multiples in d3 With clickme,
+  ncol: 4,
+  x_axis_location: 1
+}
+
+require_packages:
+  - df2json
+  - reshape2
+
+require_server: no
+
+original_url: http://blog.sdqali.in/visualizations/datamyheart/presentation

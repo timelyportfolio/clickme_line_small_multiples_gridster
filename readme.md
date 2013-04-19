@@ -1,0 +1,60 @@
+# d3 Line in Gridster Small Multiples Ractive
+Ractive to work with [clickme](http://github.com/nachocab/clickme)
+
+
+## Currencies in Gridster Small Multiples using R and clickme
+### [Live Example](http://bl.ocks.org/timelyportfolio/5422997)
+
+To recreate in R, copy/paste this code.
+
+```{r,results="asis",message=FALSE,error=FALSE,warning=FALSE}
+#get Japan yield data from the Ministry of Finance Japan
+#data goes back to 1974
+
+require(quantmod)
+require(clickme)
+
+#get currency data from the FED FRED data series
+getSymbols("DEXKOUS",src="FRED") #load Korea
+getSymbols("DEXMAUS",src="FRED") #load Malaysia
+getSymbols("DEXSIUS",src="FRED") #load Singapore
+getSymbols("DEXTAUS",src="FRED") #load Taiwan
+getSymbols("DEXCHUS",src="FRED") #load China
+getSymbols("DEXJPUS",src="FRED") #load Japan
+getSymbols("DEXTHUS",src="FRED") #load Thailand
+getSymbols("DEXBZUS",src="FRED") #load Brazil
+getSymbols("DEXMXUS",src="FRED") #load Mexico
+getSymbols("DEXINUS",src="FRED") #load India
+getSymbols("DTWEXO",src="FRED") #load US Dollar Other Trading Partners
+getSymbols("DTWEXB",src="FRED") #load US Dollar Broad
+
+currencies<-merge(DEXKOUS,DEXMAUS,DEXSIUS,DEXTAUS,DEXCHUS,DEXJPUS,DEXTHUS,DEXBZUS,DEXMXUS,DEXINUS,DTWEXO,DTWEXB)
+currencies<-na.omit(currencies)
+
+xtsMelt <- function(data) {
+    require(reshape2)
+    
+    #translate xts to time series to json with date and data
+    #for this behavior will be more generic than the original
+    #data will not be transformed, so template.rmd will be changed to reflect
+    
+    
+    #convert to data frame
+    data.df <- data.frame(cbind(format(index(data),"%Y-%m-%d"),coredata(data)))
+    colnames(data.df)[1] = "date"
+    data.melt <- melt(data.df,id.vars=1,stringsAsFactors=FALSE)
+    colnames(data.melt) <- c("date","indexname","value")
+    #remove periods from indexnames to prevent javascript confusion
+    #these . usually come from spaces in the colnames when melted
+    data.melt[,"indexname"] <- apply(matrix(data.melt[,"indexname"]),2,gsub,pattern="[.]",replacement="")
+    return(data.melt)
+    #return(df2json(na.omit(data.melt)))
+    
+  }
+  
+  currencies.roc <- currencies/lag(currencies,k=1) - 1
+  currencies.melt <- xtsMelt(cumprod(1+currencies.roc["2012::",]))
+
+  set_root_path("c:/users/kent.tleavell_nt/dropbox/development/r")
+  clickme(currencies.melt,"clickme_line_small_multiples_gridster")
+```
